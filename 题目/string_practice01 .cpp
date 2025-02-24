@@ -112,6 +112,9 @@ int p_3(const string str,const string s)
 
     // return ;
 
+//·´×ª¾ä×Ó
+
+
 
 int main()
 {
@@ -125,11 +128,11 @@ int main()
 
     string s1;
     cin>>s1;
-    cout<<p_3(str1,s1);
+    cout<<p_3(str1,s1)<<endl;
 
     string s2;
     cin>>s2;
-    cout<<p_3(str1,s2);
+    cout<<p_3(str1,s2)<<endl;
 
 
     return 0;
