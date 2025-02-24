@@ -1,0 +1,6 @@
+﻿  FileName.cpp
+D:\C++学习\机考\FileName.cpp(15,19): error C3867: “Sphere::getR”: 非标准语法；请使用 "&" 来创建指向成员的指针
+D:\C++学习\机考\FileName.cpp(15,19): error C2440: “=”: 无法从“double (__cdecl Sphere::* )(void)”转换为“double”
+      D:\C++学习\机考\FileName.cpp(15,19):
+      没有使该转换得以执行的上下文
+  
