@@ -16,6 +16,28 @@ void Food::generate() //随机生成 food 在地图上
   position.setY(y);
 }
 
+void Food::generate(const QList<QPoint>& SnakeBody)
+{
+  bool vaild = false;
+  while(!vaild)
+  {
+    int x = QRandomGenerator::global()->bounded(maxX);
+    int y = QRandomGenerator::global()->bounded(maxY);
+    position.setX(x);
+    position.setY(y);
+    vaild = true;
+
+    for(const QPoint& p : SnakeBody)
+    {
+      if(p == position)
+      {
+        vaild = false;
+        break;
+      }
+    }
+  }
+}
+
 QPoint Food::getPosition() const //获取 food 的坐标
 {
   return position;

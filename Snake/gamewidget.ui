@@ -6,32 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>698</width>
+    <height>554</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Widget</string>
   </property>
-  <widget class="gamewidget" name="widget" native="true">
-   <property name="geometry">
-    <rect>
-     <x>89</x>
-     <y>89</y>
-     <width>371</width>
-     <height>331</height>
-    </rect>
-   </property>
-  </widget>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>gamewidget</class>
-   <extends>QWidget</extends>
-   <header>gamewidget.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

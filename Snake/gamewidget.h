@@ -5,6 +5,7 @@
 #include <QTimer>
 #include "snake.h"
 #include "food.h"
+#include "ui_widget.h"
 
 class GameWidget : public QWidget
 {
@@ -19,6 +20,9 @@ protected:
 
 private slots:
   void updateGame(); // 每帧更新
+  void on_btnStart_clicked(); //btnStart 的槽函数
+  void on_btnPause_clicked(); //btnPause 的槽函数
+  void on_btnRestart_clicked(); //btnRestart 的超函数
 
 private:
   const int gridSize = 20; // 每个方格的像素大小
@@ -28,6 +32,8 @@ private:
   Snake snake; // 蛇
   Food food; // 食物
   bool gameOver = false;
+  bool isPause =false;
+  Ui::Menu *ui;
 
   bool checkCollision(); // 碰撞检测
 };

@@ -20,7 +20,7 @@ HEADERS += \
     snake.h
 
 FORMS += \
-    gamewidget.ui
+    widget.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
