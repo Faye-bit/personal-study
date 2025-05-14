@@ -124,9 +124,13 @@ void GameWidget::keyPressEvent(QKeyEvent *event) //重写 keyPressEvent() 函数
   switch (event->key()) //检测键盘输入，并设置为蛇新的行进方向
   {
   case Qt::Key_Up:    snake.setDirection(Up); break;
+  case Qt::Key_W:     snake.setDirection(Up); break;
   case Qt::Key_Down:  snake.setDirection(Down); break;
+  case Qt::Key_S:     snake.setDirection(Down); break;
   case Qt::Key_Left:  snake.setDirection(Left); break;
+  case Qt::Key_A:     snake.setDirection(Left); break;
   case Qt::Key_Right: snake.setDirection(Right); break;
+  case Qt::Key_D:     snake.setDirection(Right); break;
   }
 }
 
