@@ -19,22 +19,24 @@ void Food::generate() //随机生成 food 在地图上
 void Food::generate(const QList<QPoint>& SnakeBody)
 {
   bool vaild = false;
+  QPoint temp;
   while(!vaild)
   {
     int x = QRandomGenerator::global()->bounded(maxX);
     int y = QRandomGenerator::global()->bounded(maxY);
-    position.setX(x);
-    position.setY(y);
+    temp.setX(x);
+    temp.setY(y);
     vaild = true;
 
     for(const QPoint& p : SnakeBody)
     {
-      if(p == position)
+      if(p == temp || position == temp)
       {
         vaild = false;
         break;
       }
     }
+    position = temp;
   }
 }
 
