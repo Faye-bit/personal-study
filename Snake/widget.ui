@@ -92,7 +92,7 @@
     <item>
      <widget class="QPushButton" name="btnStart">
       <property name="text">
-       <string>Start</string>
+       <string>开始</string>
       </property>
      </widget>
     </item>
@@ -102,7 +102,7 @@
     <item>
      <widget class="QPushButton" name="btnRestart">
       <property name="text">
-       <string>Restart</string>
+       <string>重新开始</string>
       </property>
      </widget>
     </item>

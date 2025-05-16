@@ -21,6 +21,8 @@ GameWidget::GameWidget(QWidget *parent): QWidget(parent), food(gridWidth, gridHe
    //载入最高得分
   this->loadScore();
 
+  welcome = 0;
+
    //载入foodImage
   foodImage.load(":/png/pix/food.png");
    //设置初始游戏速度
@@ -28,7 +30,7 @@ GameWidget::GameWidget(QWidget *parent): QWidget(parent), food(gridWidth, gridHe
 
    // 初始化按钮
   isPause = false;
-  ui->btnPause->setText("Pause");
+  ui->btnPause->setText("暂停");
   ui->btnPause->setEnabled(false);
   ui->LabelScore->setText("当前得分\n     "+QString::number(score));
   ui->LabelHigh->setText("最高得分\n     "+QString::number(Max_score));
@@ -64,16 +66,46 @@ void GameWidget::paintEvent(QPaintEvent *) //重写 paintEvent() 函数，进行
 
    // 画蛇
   painter.setBrush(Qt::green);
-  int color=100;
+
+  //int color_first = 100;
+  //int color_step = 5;
+  //int index = 0;
+  int hue = 120;
+
   for (const QPoint &p : snake.getBody())
   {
+    //int red = qMin(255,100 + color_step*index);
+    //int green = qMax(0,200 - color_step*index);
+    //int blue = 0;
+
     //painter.drawRect(p.x() * gridSize, p.y() * gridSize, gridSize, gridSize);
+
+    QColor color = QColor::fromHsv(hue % 360,200,130);
+
     QRect rect(p.x() * gridSize, p.y() * gridSize, gridSize, gridSize);
-    painter.setBrush(QColor(0,color,0));
+    painter.setBrush(color);
     painter.setPen(Qt::NoPen);
 
-    painter.drawRoundedRect(rect,6,6);
-    color += 5;
+    painter.drawRoundedRect(rect,5,5);
+
+    hue += 5;
+    //index++;
+
+     //渐变色
+    /*if(color1 < 250)
+    {
+      color1 += 10;
+    }
+    else if(color2 < 250)
+    {
+      color2 += 10;
+    }
+    else if(color3 < 250)
+    {
+      color3 += 10;
+    }*/
+
+
   }
 
    // 画食物
@@ -88,19 +120,27 @@ void GameWidget::paintEvent(QPaintEvent *) //重写 paintEvent() 函数，进行
   //qDebug() << "Food at:" << foodPos;
   //qDebug() << "gameOver:" << gameOver;
 
-   // 游戏结束提示
-  if (gameOver)
+   // 游戏提示
+  if (welcome == 0)
   {
     painter.setPen(Qt::black);
     painter.setFont(QFont("Arial", 20));
-    painter.drawText(rect(), Qt::AlignCenter, "Game Over\nPress R to Restart");
+    painter.drawText(rect(), Qt::AlignCenter, "按R键以开始游戏");
+    //welcome = false;
   }
+  else if (gameOver)
+  {
+    painter.setPen(Qt::black);
+    painter.setFont(QFont("Arial", 20));
+    painter.drawText(rect(), Qt::AlignCenter, "游戏结束\n按R键重新开始");
+  }
+
    // 游戏暂停提示
   if (isPause && !gameOver)
   {
     painter.setPen(Qt::black);
     painter.setFont(QFont("Arial", 15));
-    painter.drawText(rect(), Qt::AlignCenter, "Game Pause\nPress Continue to Resume");
+    painter.drawText(rect(), Qt::AlignCenter, "游戏暂停");
   }
 }
 
@@ -112,7 +152,7 @@ void GameWidget::keyPressEvent(QKeyEvent *event) //重写 keyPressEvent() 函数
     food.generate(snake.getBody());
     gameOver = false;
     isPause = false;
-    ui->btnPause->setText("Pause");
+    ui->btnPause->setText("暂停");
     ui->btnPause->setEnabled(false);
     score = 0;
 
@@ -121,22 +161,48 @@ void GameWidget::keyPressEvent(QKeyEvent *event) //重写 keyPressEvent() 函数
     return;
   }
 
+  if (!gameOver && event->key() == Qt::Key_Space)
+  {
+    if(isPause)
+    {
+      ui->btnPause->setText("继续"); //切换按钮的文字显示
+      timer->start(GSpeed); //计时器开始
+      isPause = false;
+      setFocus();
+      update();
+      return;
+    }
+    else
+    {
+      ui->btnPause->setText("继续"); //切换按钮的文字显示
+      timer->stop();  //计时器暂停
+      isPause = true;
+      setFocus();
+      update();
+      return;
+    }
+  }
+
+  if(directionChange)return; //防止一次 update 多次改变方向
+
   switch (event->key()) //检测键盘输入，并设置为蛇新的行进方向
   {
-  case Qt::Key_Up:    snake.setDirection(Up); break;
-  case Qt::Key_W:     snake.setDirection(Up); break;
-  case Qt::Key_Down:  snake.setDirection(Down); break;
-  case Qt::Key_S:     snake.setDirection(Down); break;
-  case Qt::Key_Left:  snake.setDirection(Left); break;
-  case Qt::Key_A:     snake.setDirection(Left); break;
-  case Qt::Key_Right: snake.setDirection(Right); break;
-  case Qt::Key_D:     snake.setDirection(Right); break;
+  case Qt::Key_Up:    snake.setDirection(Up); directionChange = true; break;
+  case Qt::Key_W:     snake.setDirection(Up); directionChange = true; break;
+  case Qt::Key_Down:  snake.setDirection(Down); directionChange = true; break;
+  case Qt::Key_S:     snake.setDirection(Down); directionChange = true; break;
+  case Qt::Key_Left:  snake.setDirection(Left); directionChange = true; break;
+  case Qt::Key_A:     snake.setDirection(Left); directionChange = true; break;
+  case Qt::Key_Right: snake.setDirection(Right); directionChange = true; break;
+  case Qt::Key_D:     snake.setDirection(Right); directionChange = true; break;
   }
+
 }
 
 void GameWidget::updateGame()
 {
   snake.move();
+  directionChange = false;
   ui->LabelScore->setText("当前得分\n     "+QString::number(score));
   ui->LabelHigh->setText("最高得分\n     "+QString::number(Max_score));
 
@@ -222,7 +288,7 @@ bool GameWidget::checkCollision()
 
 void GameWidget::on_btnStart_clicked()
 {
-  qDebug() << "GameOver:" << gameOver;
+  //qDebug() << "GameOver:" << gameOver;
   if(gameOver)
   {
      // 重置游戏状态
@@ -230,11 +296,13 @@ void GameWidget::on_btnStart_clicked()
     food.generate(snake.getBody());
     gameOver = false;
     isPause = false;
-    ui->btnPause->setText("Pause");
+    ui->btnPause->setText("暂停");
     ui->btnPause->setEnabled(true);
     score = 0;
 
     timer->start(GSpeed);
+
+    welcome++;
 
     setFocus();
     update();
@@ -246,7 +314,7 @@ void GameWidget::on_btnPause_clicked()
   //qDebug() << "isPause:" <<isPause;
   if(isPause)
   {
-    ui->btnPause->setText("Pause"); //切换按钮的文字显示
+    ui->btnPause->setText("暂停"); //切换按钮的文字显示
     timer->start(GSpeed); //计时器开始
     isPause = false;
     setFocus();
@@ -255,15 +323,13 @@ void GameWidget::on_btnPause_clicked()
   }
   else
   {
-    ui->btnPause->setText("Continue"); //切换按钮的文字显示
+    ui->btnPause->setText("继续"); //切换按钮的文字显示
     timer->stop();  //计时器暂停
     isPause = true;
     setFocus();
     update();
     return;
   }
-
-
 }
 
 void GameWidget::on_btnRestart_clicked()
@@ -273,10 +339,12 @@ void GameWidget::on_btnRestart_clicked()
   food.generate(snake.getBody());
   gameOver = false;
   isPause = false;
-  ui->btnPause->setText("Pause");
+  ui->btnPause->setText("暂停");
   score = 0;
 
   timer->start(150);
+
+  welcome++;
 
   setFocus();
   update();

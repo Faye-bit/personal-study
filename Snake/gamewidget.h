@@ -40,8 +40,10 @@ private:
   Snake snake; // 蛇
   Food food; // 食物
   QPixmap foodImage;
+  int welcome = 0; //打开游戏提示
   bool gameOver = true; //游戏结束
   bool isPause =false; //游戏暂停
+  bool directionChange = false; //防止方向再一次 update 中多次改变
   Ui::Menu *ui;
   int score = 0; //得分
   int Max_score = 0; //最高得分
